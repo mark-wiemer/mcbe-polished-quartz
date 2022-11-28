@@ -1,4 +1,4 @@
-import { ItemStack, TicksPerSecond, World } from "./types";
+import { InventoryComponentContainer, ItemStack, RawInventory, TicksPerSecond, World } from "./types";
 
 /** Every 5 seconds, announce the total number of seconds that have elapsed */
 export const announceSeconds = (tickNum: number, world: World): void => {
@@ -10,12 +10,10 @@ export const announceSeconds = (tickNum: number, world: World): void => {
   }
 };
 
-type Inventory = (ItemStack | undefined)[];
-
-export const sortInventory = (unsortedInventory: Inventory): ItemStack[] => {
+export const sortInventory = (unsortedInventory: RawInventory): ItemStack[] => {
   const sortedInventory: ItemStack[] = [];
 
-  (unsortedInventory.filter((x) => x !== undefined) as ItemStack[]).forEach((itemStack) => {
+  (unsortedInventory.filter((x) => x) as ItemStack[]).forEach((itemStack) => {
     const sortedStack = sortedInventory.find((sortedStack) => sortedStack.typeId === itemStack.typeId);
     if (sortedStack) {
       sortedStack.amount += itemStack.amount;
@@ -26,3 +24,6 @@ export const sortInventory = (unsortedInventory: Inventory): ItemStack[] => {
 
   return sortedInventory;
 };
+
+export const readInventory = (inv: Pick<InventoryComponentContainer, "getItem" | "size">): RawInventory =>
+  new Array(inv.size).fill(0).map((_, i) => inv.getItem(i));

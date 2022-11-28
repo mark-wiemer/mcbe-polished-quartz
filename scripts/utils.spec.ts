@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { announceSeconds, sortInventory } from "./utils";
+import { announceSeconds, sortInventory, readInventory } from "./utils";
 
 describe("addition", () => {
   it.each([
@@ -57,4 +57,36 @@ describe("sortInventory", () => {
       ],
     ],
   ])("%s", async (...[, unsortedInventory, expected]) => expect(sortInventory(unsortedInventory)).toEqual(expected));
+});
+
+describe("readInventory", () => {
+  it.each([
+    [
+      "small inventory",
+      {
+        size: 3,
+        getItem: (slot: number) => {
+          const inv: Record<number, { typeId: string; amount: number }> = {
+            0: { typeId: "apple", amount: 1 },
+            1: { typeId: "potato", amount: 4 },
+            2: { typeId: "sword", amount: 1 },
+          };
+          return inv[slot] ?? null;
+        },
+      },
+      [
+        { typeId: "apple", amount: 1 },
+        { typeId: "potato", amount: 4 },
+        { typeId: "sword", amount: 1 },
+      ],
+    ],
+    [
+      "empty slot",
+      {
+        size: 1,
+        getItem: () => undefined,
+      },
+      [undefined],
+    ],
+  ])("%s", async (...[, container, expected]) => expect(readInventory(container)).toStrictEqual(expected));
 });
