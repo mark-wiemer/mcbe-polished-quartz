@@ -13,7 +13,3 @@ Polished Quartz follows my efforts to understand a specific part of Minecraft Be
 ## Done
 
 1. Create project following the [official guide](https://learn.microsoft.com/en-us/minecraft/creator/documents/scriptinggettingstarted): See [commit 7e65a6a](https://github.com/mark-wiemer/mcbr-polished-quartz/tree/7e65a6a94036300ffe3a84768ef33e3c8b1bf87f)
-
-## Roadmap
-
-1. Try to recreate it with [Regolith v1.0.1](https://bedrock-oss.github.io/regolith/)
