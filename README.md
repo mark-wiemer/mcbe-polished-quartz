@@ -17,4 +17,4 @@ When you load the world, you should see a greeting chat message appear every few
 
 ## Features
 
-1. Automated tests with [vitest](https://vitest.dev/)
+Automated tests with [vitest](https://vitest.dev/). Note since we don't have the Minecraft source code, we must be creative with our imports. We're copying the imports that we need for utility functions into a local file and converting them to interfaces. This way, Vitest doesn't worry about missing implementation details.
