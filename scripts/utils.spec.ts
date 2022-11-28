@@ -46,15 +46,12 @@ describe("sortInventory", () => {
         { typeId: "apple", amount: 1 },
         { typeId: "apple", amount: 2 },
       ],
-      [{ typeId: "apple", amount: 3 }],
+      [{ from: 1, to: 0 }],
     ],
     [
       "remove empty slots",
       [{ typeId: "apple", amount: 1 }, undefined, { typeId: "bread", amount: 2 }],
-      [
-        { typeId: "apple", amount: 1 },
-        { typeId: "bread", amount: 2 },
-      ],
+      [{ from: 2, to: 1 }],
     ],
   ])("%s", async (...[, unsortedInventory, expected]) => expect(sortInventory(unsortedInventory)).toEqual(expected));
 });

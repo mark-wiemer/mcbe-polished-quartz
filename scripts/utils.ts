@@ -10,19 +10,36 @@ export const announceSeconds = (tickNum: number, world: World): void => {
   }
 };
 
-export const sortInventory = (unsortedInventory: RawInventory): ItemStack[] => {
-  const sortedInventory: ItemStack[] = [];
+interface Swap {
+  from: number;
+  to: number;
+}
 
-  (unsortedInventory.filter((x) => x) as ItemStack[]).forEach((itemStack) => {
-    const sortedStack = sortedInventory.find((sortedStack) => sortedStack.typeId === itemStack.typeId);
-    if (sortedStack) {
-      sortedStack.amount += itemStack.amount;
-    } else {
-      sortedInventory.push(itemStack);
+export const sortInventory = (unsortedInventory: RawInventory): Swap[] => {
+  const swaps: Swap[] = [];
+
+  let undefCount = 0;
+  const collapsedInv = unsortedInventory
+    // Collapse empty slots
+    .map((stack, i) => {
+      if (!stack) undefCount++;
+      const trueIndex = i - undefCount;
+      if (stack && undefCount) swaps.push({ from: i, to: trueIndex });
+      return { ...stack, trueIndex };
+    });
+
+  // Merge stacks
+  collapsedInv.forEach((itemStack, i) => {
+    if (!itemStack.typeId) return;
+    const destSlot = collapsedInv.find((invStack) => invStack.typeId === itemStack.typeId)?.trueIndex ?? -1;
+    if (destSlot !== -1 && destSlot !== itemStack.trueIndex) {
+      swaps.push({ from: itemStack.trueIndex, to: destSlot });
     }
   });
 
-  return sortedInventory;
+  // TODO post-processing to simplify swaps
+
+  return swaps;
 };
 
 export const readInventory = (inv: Pick<InventoryComponentContainer, "getItem" | "size">): RawInventory =>
