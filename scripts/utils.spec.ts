@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { announceSeconds } from "./utils";
+import { announceSeconds, sortInventory } from "./utils";
 
 describe("addition", () => {
   it.each([
@@ -36,4 +36,25 @@ describe("announceSeconds", () => {
     announceSeconds(tickNum, world);
     expect(mockRunCommandAsync).toHaveBeenCalledTimes(callCount);
   });
+});
+
+describe("sortInventory", () => {
+  it.each([
+    [
+      "merge stacks",
+      [
+        { typeId: "apple", amount: 1 },
+        { typeId: "apple", amount: 2 },
+      ],
+      [{ typeId: "apple", amount: 3 }],
+    ],
+    [
+      "remove empty slots",
+      [{ typeId: "apple", amount: 1 }, undefined, { typeId: "bread", amount: 2 }],
+      [
+        { typeId: "apple", amount: 1 },
+        { typeId: "bread", amount: 2 },
+      ],
+    ],
+  ])("%s", async (...[, unsortedInventory, expected]) => expect(sortInventory(unsortedInventory)).toEqual(expected));
 });

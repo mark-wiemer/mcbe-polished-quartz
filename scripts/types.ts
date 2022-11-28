@@ -35,3 +35,15 @@ export interface PlayerIterator {
  * How many times the server ticks per second of real time.
  */
 export const TicksPerSecond = 20;
+
+/**
+ * Defines a collection of items.
+ */
+export interface ItemStack {
+  /**
+   * Number of the items in the stack. Valid values range between
+   * 0 and 64.
+   */
+  amount: number;
+  readonly typeId: string;
+}
