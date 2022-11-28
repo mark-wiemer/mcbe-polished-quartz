@@ -48,7 +48,7 @@ const copy_content = gulp.parallel(copy_behavior_packs, copy_resource_packs);
 
 function compile_scripts() {
   return gulp
-    .src("scripts/**/*.ts")
+    .src("scripts/**/!(*.spec).ts")
     .pipe(sourcemaps.init())
     .pipe(
       ts({
