@@ -15,9 +15,7 @@ interface Swap {
   to: number;
 }
 
-/**
- * Returns the swaps necessary to sort the inventory
- */
+/** Find the swaps necessary to sort the inventory */
 export const findSwaps = (unsortedInventory: RawInventory): Swap[] => {
   const swaps: Swap[] = [];
 
@@ -45,9 +43,22 @@ export const findSwaps = (unsortedInventory: RawInventory): Swap[] => {
   return swaps;
 };
 
+/** Extract a simplified inventory from the given one, for easier processing. */
 export const readInventory = (inv: Pick<InventoryComponentContainer, "getItem" | "size">): RawInventory =>
   new Array(inv.size).fill(0).map((_, i) => {
     const itemStack = inv.getItem(i);
     // property access when getting the item from Minecraft is very wonky. Explicitly accessing properties does work.
     return itemStack ? { amount: itemStack?.amount ?? 0, typeId: itemStack?.typeId ?? "" } : undefined;
   });
+
+/** Execute the given function in a try-catch, warning and returning `null` on throw */
+export const doSafely = <T extends any[], V>(foo: (...args: T) => V): ((...args: T) => V | null) => {
+  return (...args: T) => {
+    try {
+      return foo(...args);
+    } catch (e) {
+      console.warn("Script error: " + e);
+      return null;
+    }
+  };
+};

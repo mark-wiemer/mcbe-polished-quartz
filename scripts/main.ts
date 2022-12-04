@@ -1,5 +1,5 @@
 import { world, system, Player, InventoryComponentContainer, EntityInventoryComponent } from "@minecraft/server";
-import { readInventory, findSwaps } from "./utils";
+import { readInventory, findSwaps, doSafely } from "./utils";
 
 let tickIndex = 0;
 const swaps: any[] = [];
@@ -35,22 +35,6 @@ const doNextSwap = () => {
 };
 
 system.run(mainTick);
-
-/**
- * Wraps the given function in a try-catch and warns on exception
- * @param foo Function to wrap in a try-catch
- * @returns A function that calls `foo` within a try-catch and warns on exception
- */
-function doSafely<T extends any[], V>(foo: (...args: T) => V): (...args: T) => V {
-  return (...args: T) => {
-    try {
-      return foo(...args);
-    } catch (e) {
-      console.warn("Script error: " + e);
-      return null as unknown as V;
-    }
-  };
-}
 
 world.events.beforeItemUse.subscribe(
   doSafely((event) => {
