@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { announceSeconds, sortInventory, readInventory } from "./utils";
+import { announceSeconds, findSwaps, readInventory } from "./utils";
 
 describe("addition", () => {
   it.each([
@@ -38,7 +38,7 @@ describe("announceSeconds", () => {
   });
 });
 
-describe("sortInventory", () => {
+describe("findSwaps", () => {
   it.each([
     [
       "merge stacks",
@@ -53,7 +53,7 @@ describe("sortInventory", () => {
       [{ typeId: "apple", amount: 1 }, undefined, { typeId: "bread", amount: 2 }],
       [{ from: 2, to: 1 }],
     ],
-  ])("%s", async (...[, unsortedInventory, expected]) => expect(sortInventory(unsortedInventory)).toEqual(expected));
+  ])("%s", async (...[, unsortedInventory, expected]) => expect(findSwaps(unsortedInventory)).toEqual(expected));
 });
 
 describe("readInventory", () => {

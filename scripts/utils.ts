@@ -1,4 +1,4 @@
-import { InventoryComponentContainer, ItemStack, RawInventory, TicksPerSecond, World } from "./types";
+import { InventoryComponentContainer, RawInventory, TicksPerSecond, World } from "./types";
 
 /** Every 5 seconds, announce the total number of seconds that have elapsed */
 export const announceSeconds = (tickNum: number, world: World): void => {
@@ -15,7 +15,10 @@ interface Swap {
   to: number;
 }
 
-export const sortInventory = (unsortedInventory: RawInventory): Swap[] => {
+/**
+ * Returns the swaps necessary to sort the inventory
+ */
+export const findSwaps = (unsortedInventory: RawInventory): Swap[] => {
   const swaps: Swap[] = [];
 
   let undefCount = 0;
@@ -29,7 +32,7 @@ export const sortInventory = (unsortedInventory: RawInventory): Swap[] => {
     });
 
   // Merge stacks
-  collapsedInv.forEach((itemStack, i) => {
+  collapsedInv.forEach((itemStack) => {
     if (!itemStack.typeId) return;
     const destSlot = collapsedInv.find((invStack) => invStack.typeId === itemStack.typeId)?.trueIndex ?? -1;
     if (destSlot !== -1 && destSlot !== itemStack.trueIndex) {
