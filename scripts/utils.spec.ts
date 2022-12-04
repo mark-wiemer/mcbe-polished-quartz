@@ -49,9 +49,31 @@ describe("findSwaps", () => {
       [{ from: 1, to: 0 }],
     ],
     [
-      "remove empty slots",
+      "single empty slot",
       [{ typeId: "apple", amount: 1 }, undefined, { typeId: "bread", amount: 2 }],
       [{ from: 2, to: 1 }],
+    ],
+    [
+      "many empty slots",
+      [
+        undefined,
+        { typeId: "a", amount: 1 },
+        { typeId: "b", amount: 1 },
+        undefined,
+        { typeId: "b", amount: 1 },
+        { typeId: "c", amount: 1 },
+        { typeId: "a", amount: 1 },
+        undefined,
+        { typeId: "a", amount: 1 },
+      ],
+      [
+        { from: 1, to: 0 },
+        { from: 2, to: 1 },
+        { from: 4, to: 1 },
+        { from: 5, to: 2 },
+        { from: 6, to: 0 },
+        { from: 8, to: 0 },
+      ],
     ],
   ])("%s", async (...[, unsortedInventory, expected]) => expect(findSwaps(unsortedInventory)).toEqual(expected));
 });

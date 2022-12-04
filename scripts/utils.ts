@@ -1,4 +1,4 @@
-import { InventoryComponentContainer, RawInventory, TicksPerSecond, World } from "./types";
+import { InventoryComponentContainer, ItemStack, RawInventory, TicksPerSecond, World } from "./types";
 
 /** Every 5 seconds, announce the total number of seconds that have elapsed */
 export const announceSeconds = (tickNum: number, world: World): void => {
@@ -15,31 +15,24 @@ interface Swap {
   to: number;
 }
 
-/** Find the swaps necessary to sort the inventory */
+/**
+ * Find the swaps necessary to sort the inventory
+ * TODO assumes all items are infinitely stackable
+ * TODO assumes items with the same typeId can be stacked (ignore nameTags)
+ */
 export const findSwaps = (unsortedInventory: RawInventory): Swap[] => {
   const swaps: Swap[] = [];
+  const sortedInv: ItemStack[] = [];
 
-  let undefCount = 0;
-  const collapsedInv = unsortedInventory
-    // Collapse empty slots
-    .map((stack, i) => {
-      if (!stack) undefCount++;
-      const trueIndex = i - undefCount;
-      if (stack && undefCount) swaps.push({ from: i, to: trueIndex });
-      return { ...stack, trueIndex };
-    });
-
-  // Merge stacks
-  collapsedInv.forEach((itemStack) => {
-    if (!itemStack.typeId) return;
-    const destSlot = collapsedInv.find((invStack) => invStack.typeId === itemStack.typeId)?.trueIndex ?? -1;
-    if (destSlot !== -1 && destSlot !== itemStack.trueIndex) {
-      swaps.push({ from: itemStack.trueIndex, to: destSlot });
-    }
+  unsortedInventory.forEach((unsortedStack, i) => {
+    if (!unsortedStack) return;
+    const matchIndex = sortedInv.findIndex((sortedStack) => sortedStack.typeId === unsortedStack.typeId);
+    const foundMatch = matchIndex !== -1;
+    const sortedIndex = foundMatch ? matchIndex : sortedInv.length;
+    if (foundMatch) sortedInv[sortedIndex].amount += unsortedStack.amount;
+    else sortedInv[sortedIndex] = unsortedStack;
+    if (sortedIndex !== i) swaps.push({ from: i, to: sortedIndex });
   });
-
-  // TODO post-processing to simplify swaps
-
   return swaps;
 };
 
