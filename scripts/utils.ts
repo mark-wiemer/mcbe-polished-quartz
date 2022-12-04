@@ -19,6 +19,7 @@ interface Swap {
  * Find the swaps necessary to sort the inventory
  * TODO assumes all items are infinitely stackable
  * TODO assumes items with the same typeId can be stacked (ignore nameTags)
+ * TODO does not order slots, just merges and removes empty slots
  */
 export const findSwaps = (unsortedInventory: RawInventory): Swap[] => {
   const swaps: Swap[] = [];
