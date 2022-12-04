@@ -46,4 +46,8 @@ export const findSwaps = (unsortedInventory: RawInventory): Swap[] => {
 };
 
 export const readInventory = (inv: Pick<InventoryComponentContainer, "getItem" | "size">): RawInventory =>
-  new Array(inv.size).fill(0).map((_, i) => inv.getItem(i));
+  new Array(inv.size).fill(0).map((_, i) => {
+    const itemStack = inv.getItem(i);
+    // property access when getting the item from Minecraft is very wonky. Explicitly accessing properties does work.
+    return itemStack ? { amount: itemStack?.amount ?? 0, typeId: itemStack?.typeId ?? "" } : undefined;
+  });

@@ -74,11 +74,6 @@ world.events.beforeItemUse.subscribe(
     inventory = (player.getComponent("inventory") as EntityInventoryComponent).container;
     rawInventory = readInventory(inventory).slice(0, 3);
 
-    // TODO at this point (same tick), objects do not have any properties
-    // i.e. rawInventory === [{}, ...], not [{ typeId: 'apple', amount: 1}, ...]
-    // need to ensure properties are populated before finding swaps
-    // otherwise we can't merge stacks based on typeId or any property.
-
     index = 0;
     isSorting = true;
     const newSwaps = findSwaps(rawInventory);
