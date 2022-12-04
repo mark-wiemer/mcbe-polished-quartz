@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { announceSeconds, findSwaps, readInventory } from "./utils";
+import { announceSeconds, compareFn, findSwaps, readInventory } from "./utils";
 
 describe("addition", () => {
   it.each([
@@ -75,6 +75,14 @@ describe("findSwaps", () => {
         { from: 8, to: 0 },
       ],
     ],
+    [
+      "sorts",
+      [
+        { typeId: "minecraft:bread", amount: 1 },
+        { typeId: "minecraft:apple", amount: 1 },
+      ],
+      [{ from: 1, to: 0 }],
+    ],
   ])("%s", async (...[, unsortedInventory, expected]) => expect(findSwaps(unsortedInventory)).toEqual(expected));
 });
 
@@ -108,4 +116,24 @@ describe("readInventory", () => {
       [undefined],
     ],
   ])("%s", async (...[, container, expected]) => expect(readInventory(container)).toStrictEqual(expected));
+});
+
+describe("compareFn", () => {
+  enum Sort {
+    Less = -1,
+    Equal = 0,
+    Greater = 1,
+  }
+  it.each<[string, [string, string], Sort]>([
+    [`'apple' before 'bread'`, ["minecraft:apple", "minecraft:bread"], Sort.Less],
+    [`'bread' after 'apple'`, ["minecraft:bread", "minecraft:apple"], Sort.Greater],
+    [`'carrot' equals 'carrot'`, ["minecraft:carrot", "minecraft:carrot"], Sort.Equal],
+  ])("%s", async (...[, args, expected]) => {
+    const result = compareFn(...args);
+    let actual;
+    if (result < 0) actual = Sort.Less;
+    else if (result == 0) actual = Sort.Equal;
+    else actual = Sort.Greater;
+    expect(actual).toStrictEqual(expected);
+  });
 });

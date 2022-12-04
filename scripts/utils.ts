@@ -1,3 +1,4 @@
+import { sortOrder } from "./constants";
 import { InventoryComponentContainer, ItemStack, RawInventory, TicksPerSecond, World } from "./types";
 
 /** Every 5 seconds, announce the total number of seconds that have elapsed */
@@ -16,25 +17,46 @@ interface Swap {
 }
 
 /**
- * Find the swaps necessary to sort the inventory
+ * Find the swaps necessary to sort the inventory.
  * TODO assumes all items are infinitely stackable
  * TODO assumes items with the same typeId can be stacked (ignore nameTags)
+ * TODO makes some unnecessary swaps
  * TODO does not order slots, just merges and removes empty slots
+ *
+ * TODO sorting doesn't work in Minecraft
  */
-export const findSwaps = (unsortedInventory: RawInventory): Swap[] => {
+export const findSwaps = (originalInv: RawInventory): Swap[] => {
   const swaps: Swap[] = [];
-  const sortedInv: ItemStack[] = [];
+  const mergedInv: ItemStack[] = [];
 
-  unsortedInventory.forEach((unsortedStack, i) => {
+  originalInv.forEach((unsortedStack, i) => {
     if (!unsortedStack) return;
-    const matchIndex = sortedInv.findIndex((sortedStack) => sortedStack.typeId === unsortedStack.typeId);
+    const matchIndex = mergedInv.findIndex((mergedStack) => canMerge(mergedStack, unsortedStack));
     const foundMatch = matchIndex !== -1;
-    const sortedIndex = foundMatch ? matchIndex : sortedInv.length;
-    if (foundMatch) sortedInv[sortedIndex].amount += unsortedStack.amount;
-    else sortedInv[sortedIndex] = unsortedStack;
-    if (sortedIndex !== i) swaps.push({ from: i, to: sortedIndex });
+    const mergedIndex = foundMatch ? matchIndex : mergedInv.length;
+    if (foundMatch) mergedInv[mergedIndex].amount += unsortedStack.amount;
+    else mergedInv[mergedIndex] = unsortedStack;
+    if (mergedIndex !== i) swaps.push({ from: i, to: mergedIndex });
   });
+
+  const sortedInv = [...mergedInv].sort((a, b) => compareFn(a.typeId, b.typeId));
+  mergedInv.forEach((mergedStack, i) => {
+    console.warn(`${i}: ${mergedStack.typeId}`);
+    const newIndex = sortedInv.findIndex((sortedStack) => canMerge(sortedStack, mergedStack));
+    if (newIndex < i) swaps.push({ from: i, to: newIndex });
+  });
+
   return swaps;
+};
+
+const canMerge = (a: ItemStack, b: ItemStack): boolean => a.typeId === b.typeId;
+
+export const compareFn = (a: string, b: string): number => kachow(a) - kachow(b);
+
+const kachow = (a: string) => {
+  const result = sortOrder.indexOf(a);
+  console.warn(`${a}: ${result}`);
+  return sortOrder.indexOf(a);
 };
 
 /** Extract a simplified inventory from the given one, for easier processing. */
