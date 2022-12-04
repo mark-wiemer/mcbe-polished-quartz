@@ -1,13 +1,10 @@
 import { world, system, Player, InventoryComponentContainer, EntityInventoryComponent } from "@minecraft/server";
-import { RawInventory } from "./types";
 import { readInventory, findSwaps } from "./utils";
 
 let tickIndex = 0;
 const swaps: any[] = [];
 let inventory: InventoryComponentContainer | null = null;
-let rawInventory: RawInventory | null = null;
 /** index of inventory to announce. Resets to 0 on item use. */
-let index: number = 0;
 let isSorting: boolean = false;
 
 const say = (msg: string) => world.getDimension("overworld").runCommandAsync(`say ${msg}`);
@@ -15,10 +12,8 @@ const say = (msg: string) => world.getDimension("overworld").runCommandAsync(`sa
 function mainTick() {
   try {
     tickIndex++;
-    // announceSeconds(tickIndex, world);
     if (isSorting) {
-      if (index < (rawInventory?.length ?? 0)) announceInventory();
-      else if (swaps?.length > 0) processSwaps();
+      if (swaps?.length > 0) doNextSwap();
       else {
         say("Sort complete");
         isSorting = false;
@@ -30,23 +25,13 @@ function mainTick() {
   system.run(mainTick);
 }
 
-const announceInventory = () => {
-  /** ItemStack at current index in inventory. Undefined if slot is empty. Null if something went wrong. */
-  const item = rawInventory?.[index];
-  const str = item === undefined ? "Empty" : `${item.amount} ${item.typeId.substring("minecraft:".length)}`;
-  say(`${index}: ${str}`);
-  index++;
-};
-
-const processSwaps = () => {
+/** Do the next swap to sort the inventory */
+const doNextSwap = () => {
   const swap = swaps.shift();
   const swapMsg = swap ? `from ${swap.from} to ${swap.to}` : "n/a";
   say(swapMsg);
   if (!swap || !inventory) return;
-  // if there's an item in the dest slot, swap it with item to move.
-  // Else, transfer item directly into the (empty) slot.
   inventory.transferItem(swap.from, swap.to, inventory);
-  // say(`Swapping from ${swap.from} to ${swap.to}`);
 };
 
 system.run(mainTick);
@@ -72,11 +57,8 @@ world.events.beforeItemUse.subscribe(
     const player = event.source as Player;
     if (!player.name) return;
     inventory = (player.getComponent("inventory") as EntityInventoryComponent).container;
-    rawInventory = readInventory(inventory).slice(0, 3);
-
-    index = 0;
     isSorting = true;
-    const newSwaps = findSwaps(rawInventory);
+    const newSwaps = findSwaps(readInventory(inventory));
     swaps.push(...newSwaps);
   })
 );
