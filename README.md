@@ -1,6 +1,6 @@
 # Polished Quartz
 
-Polished Quartz follows my efforts to understand a specific part of Minecraft Bedrock addon development -- creating a new project for version 1.20.30+. This update had some breaking changes that I can't fix in existing projects, so I'm going to try building from scratch and seeing what breaks.
+Polished Quartz is a template project for creating new Minecraft: Bedrock Edition add-ons. It currently supports Minecraft 1.20.30+, and will likely need some changes to support 1.21+.
 
 ## Installation
 
