@@ -14,7 +14,7 @@ Polished Quartz is a template project for creating new Minecraft: Bedrock Editio
    1. Open Minecraft (Bedrock Edition, not Java Edition)
    1. Add the new "Polished Quartz" behavior pack to a superflat world!
 
-When you load the world, you should teleport to a bedrock box and be asked to break the terracotta!
+When you load the world, you should teleport to a cobblestone box and be asked to break the terracotta!
 
 ## Features
 
