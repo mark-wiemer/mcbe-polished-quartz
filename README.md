@@ -11,9 +11,10 @@ Polished Quartz follows my efforts to understand a specific part of Minecraft Be
 1. Follow [chapter 2 of official guide](https://learn.microsoft.com/en-us/minecraft/creator/documents/scriptinggettingstarted#chapter-2-lets-test-the-parts-of-our-project):
    1. Run `Set-ExecutionPolicy -Scope Process -ExecutionPolicy Bypass` in PowerShell
    1. Run `npm run build`
-   1. Add the new "Polished Quartz" behavior pack to a world with the "Beta APIs" flag enabled
+   1. Open Minecraft (Bedrock Edition)
+   1. Add the new "Polished Quartz" behavior pack to a superflat world!
 
-When you load the world, you should see a greeting chat message appear every few seconds :)
+When you load the world, you should teleport to a bedrock box and be asked to break the terracotta!
 
 ## Features
 
