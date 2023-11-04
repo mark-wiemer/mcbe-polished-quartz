@@ -2,10 +2,14 @@
   "version": "0.2.0",
   "configurations": [
     {
-      "type": "node",
-      "request": "launch",
-      "name": "Launch Current Opened File",
-      "program": "${file}"
+      "type": "minecraft-js",
+      "request": "attach",
+      "name": "Debug with Minecraft",
+      "mode": "listen",
+      "preLaunchTask": "build",
+      "sourceMapRoot": "${workspaceFolder}/build/behavior_packs/_cottaDebug/",
+      "generatedSourceRoot": "${workspaceFolder}/build/behavior_packs/cotta/scripts/",
+      "port": 19144
     }
   ]
 }
