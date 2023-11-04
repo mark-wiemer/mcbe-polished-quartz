@@ -10,6 +10,7 @@
     "gulp-cli": "^2.3.0",
     "gulp-sourcemaps": "^3.0.0",
     "gulp-typescript": "^6.0.0-alpha.1",
+    "source-map": "^0.7.4",
     "typescript": "^4.4.3",
     "vite": "^3.2.4",
     "vitest": "^0.25.3"
@@ -25,6 +26,8 @@
     "buildwatch": "gulp watch"
   },
   "dependencies": {
-    "@minecraft/server": "^1.1.0-beta.preview.1.19.50.22"
+    "@minecraft/server": "1.5.0",
+    "@minecraft/server-ui": "1.1.0",
+    "decode-uri-component": "^0.2.2"
   }
 }

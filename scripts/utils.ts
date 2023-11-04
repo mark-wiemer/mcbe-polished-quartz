@@ -1,4 +1,4 @@
-import { TicksPerSecond, World } from "./types";
+import { TicksPerSecond, World } from "./types-1-0-0-beta";
 
 /** Every 5 seconds, announce the total number of seconds that have elapsed */
 export const announceSeconds = (tickNum: number, world: World): void => {
