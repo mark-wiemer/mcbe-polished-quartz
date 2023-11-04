@@ -23,3 +23,4 @@ Automated tests with [vitest](https://vitest.dev/). Note since we don't have the
 ## References
 
 - [Build a gameplay experience with TypeScript - Microsoft Learn](https://learn.microsoft.com/en-us/minecraft/creator/documents/scriptinggettingstarted)
+- [Minecraft: Bedrock Edition projects](https://github.com/mark-wiemer/minecraft-bedrock): My personal homepage for what I learn about add-on development.
